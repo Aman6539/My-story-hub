@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Story Hub</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #fefefe; }
+    h1 { text-align: center; }
+    form { margin-bottom: 30px; }
+    textarea { width: 100%; height: 100px; margin-bottom: 10px; }
+    input[type="text"] { width: 100%; padding: 8px; margin-bottom: 10px; }
+    button { padding: 10px 20px; cursor: pointer; }
+    .story { background: #f4f4f4; padding: 15px; margin-bottom: 15px; border-radius: 8px; }
+    .story h3 { margin: 0 0 5px; }
+  </style>
+</head>
+<body>
+  <h1>📚 My Story Hub</h1>
+
+  <form id="storyForm">
+    <input type="text" id="title" placeholder="Story Title" required />
+    <textarea id="content" placeholder="Write your story here..." required></textarea>
+    <button type="submit">Post Story</button>
+  </form>
+
+  <div id="stories"></div>
+
+  <script>
+    const form = document.getElementById('storyForm');
+    const storiesDiv = document.getElementById('stories');
+
+    function loadStories() {
+      const stories = JSON.parse(localStorage.getItem('stories')) || [];
+      storiesDiv.innerHTML = '';
+      stories.forEach((story, index) => {
+        const div = document.createElement('div');
+        div.className = 'story';
+        div.innerHTML = `<h3>${story.title}</h3><p>${story.content}</p>`;
+        storiesDiv.appendChild(div);
+      });
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const title = document.getElementById('title').value.trim();
+      const content = document.getElementById('content').value.trim();
+
+      if (title && content) {
+        const stories = JSON.parse(localStorage.getItem('stories')) || [];
+        stories.unshift({ title, content });
+        localStorage.setItem('stories', JSON.stringify(stories));
+        form.reset();
+        loadStories();
+      }
+    });
+
+    loadStories();
+  </script>
+</body>
+</html>
